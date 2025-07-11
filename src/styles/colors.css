@@ -1,0 +1,668 @@
+:root {
+  /* Background Hierarchy */
+  --main-background: #F8F9FA;
+  --content-background: #FFFFFF;
+  --subtle-border: #D0D0D0;
+  
+  /* Action & Interaction Colors */
+  --primary-action: #00A8E8;
+  --secondary-action: #FF7F11;
+  --achievement: #7ED957;
+  --reward: #FFC300;
+  
+  /* Text Colors */
+  --text-primary: #1a1a1a;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  
+  /* Status Colors */
+  --urgent: #FF4444;
+  --warning: #FF8C00;
+  --success: #28A745;
+  --info: #17A2B8;
+}
+
+/* Global maximized layout styles */
+.maximized-layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  background-color: var(--main-background);
+  margin: 0;
+  padding: 0;
+}
+
+.discovery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  background-color: var(--main-background);
+}
+
+/* CRITICAL: Responsive Kanban Board - NO HORIZONTAL PAGE SCROLLING */
+.kanban-board-maximized {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  padding: 20px;
+  overflow-y: auto;
+  overflow-x: hidden; /* CRITICAL: Prevents horizontal page scrolling */
+  height: calc(100vh - 140px);
+  background-color: var(--main-background);
+  justify-content: center;
+}
+
+.unified-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  height: calc(100vh - 120px);
+  background-color: var(--main-background);
+}
+
+/* Multi-Board Pipeline Specific Styles - RESPONSIVE DESIGN */
+.multi-board-pipeline {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.board-navigator {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--content-background);
+  border-bottom: 1px solid var(--subtle-border);
+}
+
+/* CRITICAL: Board-Internal Scrolling Only */
+.kanban-board-container {
+  overflow-y: auto;
+  overflow-x: hidden; /* CRITICAL: No horizontal page scrolling */
+  max-width: 100vw;
+  position: relative;
+}
+
+/* Individual Stage Containers - Internal Scrolling Only */
+.pipeline-stage-column {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--content-background);
+  border-radius: 12px;
+  border: 1px solid var(--subtle-border);
+  overflow: hidden;
+  height: fit-content;
+  max-height: calc(100vh - 300px);
+}
+
+.stage-jobs-container {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  overflow-x: hidden; /* CRITICAL: No horizontal scrolling within stages */
+  max-height: calc(100vh - 400px);
+}
+
+.stage-jobs-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stage-jobs-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.stage-jobs-container::-webkit-scrollbar-thumb {
+  background: var(--subtle-border);
+  border-radius: 3px;
+}
+
+.multi-board-gamification-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  background-color: var(--content-background);
+  border-top: 1px solid var(--subtle-border);
+}
+
+/* RESPONSIVE BREAKPOINTS - Mobile First Design */
+@media (max-width: 480px) {
+  .unified-layout {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px;
+  }
+  
+  .discovery-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px;
+  }
+  
+  .kanban-board-maximized {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 8px;
+  }
+  
+  .pipeline-stage-column {
+    min-width: 100%;
+    max-width: 100%;
+  }
+  
+  .multi-board-gamification-footer {
+    padding: 8px;
+  }
+  
+  .multi-board-gamification-footer > div {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 768px) {
+  .unified-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .discovery-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px;
+  }
+  
+  .kanban-board-maximized {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 8px;
+    padding: 12px;
+  }
+  
+  .pipeline-stage-column {
+    min-width: 250px;
+    max-width: 100%;
+  }
+  
+  .multi-board-gamification-footer {
+    padding: 12px;
+  }
+  
+  .multi-board-gamification-footer > div {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .discovery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    padding: 16px;
+  }
+  
+  .kanban-board-maximized {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+    padding: 16px;
+  }
+  
+  .pipeline-stage-column {
+    min-width: 280px;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .discovery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    max-width: none;
+  }
+  
+  .pipeline-stage-column {
+    min-width: 320px;
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 1600px) {
+  .discovery-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    padding: 24px;
+  }
+  
+  .kanban-board-maximized {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  
+  .pipeline-stage-column {
+    min-width: 340px;
+    max-width: 100%;
+  }
+}
+
+/* Enhanced progress bars */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: var(--subtle-border);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary-action) 0%, #0088CC 100%);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.progress-fill.achievement {
+  background: linear-gradient(90deg, var(--achievement) 0%, #6BC946 100%);
+}
+
+.progress-fill.reward {
+  background: linear-gradient(90deg, var(--reward) 0%, #E6B000 100%);
+}
+
+.progress-fill.secondary {
+  background: linear-gradient(90deg, var(--secondary-action) 0%, #E6650E 100%);
+}
+
+/* Enhanced card styles - Responsive */
+.maximized-card {
+  background-color: var(--content-background);
+  border: 1px solid var(--subtle-border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.maximized-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary-action), var(--secondary-action), var(--achievement));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.maximized-card:hover::before {
+  opacity: 1;
+}
+
+.maximized-card:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-action);
+  transform: translateY(-2px);
+}
+
+/* Enhanced button styles */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-action) 0%, #0088CC 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0088CC 0%, var(--primary-action) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0, 168, 232, 0.3);
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--secondary-action) 0%, #E6650E 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, #E6650E 0%, var(--secondary-action) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 127, 17, 0.3);
+}
+
+.btn-achievement {
+  background: linear-gradient(135deg, var(--achievement) 0%, #6BC946 100%);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-achievement:hover {
+  background: linear-gradient(135deg, #6BC946 0%, var(--achievement) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(126, 217, 87, 0.3);
+}
+
+.btn-reward {
+  background: linear-gradient(135deg, var(--reward) 0%, #E6B000 100%);
+  color: var(--text-primary);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-reward:hover {
+  background: linear-gradient(135deg, #E6B000 0%, var(--reward) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(255, 195, 0, 0.3);
+}
+
+/* Enhanced status indicators */
+.status-urgent {
+  color: var(--urgent);
+  background: linear-gradient(135deg, rgba(255, 68, 68, 0.1) 0%, rgba(255, 68, 68, 0.05) 100%);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+.status-warning {
+  color: var(--warning);
+  background: linear-gradient(135deg, rgba(255, 140, 0, 0.1) 0%, rgba(255, 140, 0, 0.05) 100%);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 140, 0, 0.2);
+}
+
+.status-success {
+  color: var(--success);
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1) 0%, rgba(40, 167, 69, 0.05) 100%);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+/* Enhanced match score styling */
+.match-score {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.match-score::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.6s;
+}
+
+.match-score:hover::before {
+  left: 100%;
+}
+
+.match-score.high {
+  background: linear-gradient(135deg, rgba(126, 217, 87, 0.2) 0%, rgba(126, 217, 87, 0.1) 100%);
+  color: var(--achievement);
+  border: 2px solid var(--achievement);
+  box-shadow: 0 2px 8px rgba(126, 217, 87, 0.2);
+}
+
+.match-score.medium {
+  background: linear-gradient(135deg, rgba(0, 168, 232, 0.2) 0%, rgba(0, 168, 232, 0.1) 100%);
+  color: var(--primary-action);
+  border: 2px solid var(--primary-action);
+  box-shadow: 0 2px 8px rgba(0, 168, 232, 0.2);
+}
+
+.match-score.low {
+  background: linear-gradient(135deg, rgba(255, 127, 17, 0.2) 0%, rgba(255, 127, 17, 0.1) 100%);
+  color: var(--secondary-action);
+  border: 2px solid var(--secondary-action);
+  box-shadow: 0 2px 8px rgba(255, 127, 17, 0.2);
+}
+
+/* Smooth scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--main-background);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--subtle-border);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Loading animations */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-in {
+  animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus states for accessibility */
+button:focus,
+input:focus,
+select:focus {
+  outline: 2px solid var(--primary-action);
+  outline-offset: 2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --subtle-border: #808080;
+    --text-secondary: #404040;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Multi-board specific animations */
+@keyframes boardSwitchFade {
+  0% { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.board-switch-animation {
+  animation: boardSwitchFade 0.3s ease-out;
+}
+
+/* Board selector dropdown */
+.board-selector-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--content-background);
+  border: 1px solid var(--subtle-border);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 200px;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.board-selector-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  background-color: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--subtle-border);
+  transition: background-color 0.2s ease;
+}
+
+.board-selector-item:hover {
+  background-color: var(--main-background);
+}
+
+.board-selector-item.active {
+  background-color: var(--main-background);
+  font-weight: 600;
+}
+
+.board-selector-item:last-child {
+  border-bottom: none;
+}
+
+/* Text overflow handling for responsive design */
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.word-break {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Responsive text sizing */
+@media (max-width: 480px) {
+  .maximized-card {
+    padding: 12px;
+  }
+  
+  .maximized-card h5 {
+    font-size: 13px !important;
+  }
+  
+  .maximized-card p {
+    font-size: 12px !important;
+  }
+  
+  .match-score {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+}
+
+/* Ensure no horizontal overflow anywhere */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.maximized-layout,
+.multi-board-pipeline,
+.kanban-board-container,
+.pipeline-stage-column,
+.stage-jobs-container {
+  overflow-x: hidden;
+  max-width: 100%;
+}
