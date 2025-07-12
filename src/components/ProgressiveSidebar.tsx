@@ -1,345 +1,155 @@
-import React from 'react';
-import { 
-  Target, 
-  Flame, 
-  Trophy, 
-  Gift, 
-  TrendingUp, 
-  Zap, 
-  Brain, 
-  FileText, 
-  Mail, 
-  Search,
-  Calendar,
-  DollarSign,
-  Users,
-  Award,
-  Star
-} from 'lucide-react';
-import { UserProgress } from '../types';
+import React, { useState } from 'react';
+import { Home, User, Settings, Search, Filter, ChevronDown, X } from 'lucide-react';
 
-interface ProgressiveSidebarProps {
-  userProgress: UserProgress;
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+  currentMode: string;
+  onModeChange: (mode: string) => void;
 }
 
-export const ProgressiveSidebar: React.FC<ProgressiveSidebarProps> = ({ userProgress }) => {
-  const dailyProgressPercentage = (userProgress.dailyGoals.applications / userProgress.dailyGoals.maxApplications) * 100;
-  const viewProgressPercentage = (userProgress.dailyGoals.viewedJobs / userProgress.dailyGoals.maxViewedJobs) * 100;
-
-  const todaysActions = [
-    { action: 'Profile updated', xp: 5, completed: true },
-    { action: '2 jobs bookmarked', xp: 10, completed: true },
-    { action: 'Skills assessment completed', xp: 15, completed: true },
-    { action: 'Applied to 2 jobs', xp: 20, completed: false },
-    { action: 'Reviewed 4 more jobs', xp: 8, completed: false }
-  ];
-
-  const smartActions = [
-    { icon: Brain, label: 'AI Match Analysis', tag: 'New!', color: 'var(--primary-action)' },
-    { icon: FileText, label: 'Tailor Resume for Selected Jobs', color: 'var(--secondary-action)' },
-    { icon: Mail, label: 'Generate Outreach Messages', color: 'var(--achievement)' },
-    { icon: Search, label: 'Research Company Culture', color: 'var(--reward)' }
-  ];
-
-  const marketInsights = [
-    'Backend roles ↗️ 15% this week',
-    'Your profile matches: 47 new jobs today',
-    'Salary insight: You\'re targeting top 20%',
-    'Application tip: 3PM-5PM best response rates'
-  ];
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, currentMode, onModeChange }) => {
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
 
   return (
-    <div style={{
-      backgroundColor: 'var(--content-background)',
-      border: '1px solid var(--subtle-border)',
-      borderRadius: '12px',
-      padding: '20px',
-      height: 'fit-content',
-      maxHeight: 'calc(100vh - 140px)',
-      overflowY: 'auto',
-      position: 'sticky',
-      top: '20px'
-    }}>
-      {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <h3 style={{ 
-          fontSize: '18px',
-          fontWeight: '700',
-          color: 'var(--text-primary)',
-          margin: '0 0 8px 0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          🎯 TODAY'S FOCUS
-        </h3>
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          fontSize: '14px',
-          color: 'var(--text-secondary)'
-        }}>
-          <span>🔥 {userProgress.streak}-day streak</span>
-          <span>⚡ {userProgress.xp} XP daily</span>
-        </div>
-      </div>
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={onClose}
+        />
+      )}
 
-      {/* Daily Goal Progress */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'space-between', 
-          marginBottom: '8px'
-        }}>
-          <span style={{ 
-            fontSize: '14px', 
-            fontWeight: '600', 
-            color: 'var(--text-primary)'
-          }}>
-            Daily Goal Progress
-          </span>
-          <span style={{ 
-            fontSize: '14px', 
-            color: 'var(--text-secondary)',
-            fontWeight: '600'
-          }}>
-            {userProgress.dailyGoals.viewedJobs}/10
-          </span>
+      {/* Sidebar */}
+      <aside className={`
+        fixed lg:static
+        top-0 left-0
+        h-screen w-80
+        bg-sidebar
+        border-r border-sidebar-border
+        transform transition-transform duration-300 ease-in-out
+        z-50
+        flex flex-col
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-sidebar-border">
+          <div className="flex items-center gap-3">
+            <h1 className="text-xl font-semibold text-sidebar-foreground">TooEarly</h1>
+            <span className="bg-sidebar-primary text-sidebar-primary-foreground px-2 py-1 rounded text-xs font-medium">UK</span>
+          </div>
+          <button 
+            onClick={onClose}
+            className="lg:hidden p-2 hover:bg-sidebar-accent rounded-md transition-colors"
+          >
+            <X size={20} className="text-sidebar-foreground" />
+          </button>
         </div>
-        <div className="progress-bar" style={{ marginBottom: '8px' }}>
-          <div 
-            className="progress-fill"
-            style={{ width: `${Math.min(viewProgressPercentage, 100)}%` }}
-          />
-        </div>
-        <p style={{ 
-          fontSize: '12px', 
-          color: 'var(--text-muted)', 
-          margin: 0
-        }}>
-          Target: Review 10 quality matches
-        </p>
-      </div>
 
-      {/* Quick Wins Today */}
-      <div style={{ marginBottom: '24px' }}>
-        <h4 style={{ 
-          fontSize: '14px', 
-          fontWeight: '600', 
-          color: 'var(--achievement)', 
-          margin: '0 0 12px 0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}>
-          ✅ QUICK WINS TODAY
-        </h4>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {todaysActions.map((action, index) => (
-            <div 
-              key={index}
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'space-between',
-                fontSize: '13px',
-                color: action.completed ? 'var(--achievement)' : 'var(--text-secondary)',
-                opacity: action.completed ? 1 : 0.7
-              }}
-            >
-              <span>
-                {action.completed ? '✅' : '⏳'} {action.action}
-              </span>
-              <span style={{ 
-                fontSize: '11px', 
-                fontWeight: '600',
-                color: action.completed ? 'var(--achievement)' : 'var(--text-muted)'
-              }}>
-                +{action.xp} XP
-              </span>
+        {/* User Section */}
+        <div className="p-4 border-b border-sidebar-border">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-sidebar-accent rounded-full flex items-center justify-center">
+              <User size={20} className="text-sidebar-accent-foreground" />
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Achievement Progress */}
-      <div style={{ marginBottom: '24px' }}>
-        <h4 style={{ 
-          fontSize: '14px', 
-          fontWeight: '600', 
-          color: 'var(--reward)', 
-          margin: '0 0 12px 0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}>
-          🏆 ACHIEVEMENT PROGRESS
-        </h4>
-        <div style={{
-          backgroundColor: 'rgba(255, 195, 0, 0.1)',
-          border: '1px solid var(--reward)',
-          borderRadius: '8px',
-          padding: '12px'
-        }}>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between', 
-            marginBottom: '8px'
-          }}>
-            <span style={{ 
-              fontSize: '13px', 
-              fontWeight: '600', 
-              color: 'var(--text-primary)'
-            }}>
-              🎖️ "Application Ace"
-            </span>
-            <span style={{ 
-              fontSize: '12px', 
-              color: 'var(--text-secondary)'
-            }}>
-              7/10
-            </span>
-          </div>
-          <div className="progress-bar" style={{ marginBottom: '8px' }}>
-            <div 
-              className="progress-fill reward"
-              style={{ width: '70%' }}
-            />
-          </div>
-          <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
-            <div style={{ marginBottom: '4px' }}>Progress: Almost there!</div>
-            <div style={{ color: 'var(--reward)', fontWeight: '600' }}>
-              Reward: Unlock AI cover letter generator
+            <div>
+              <p className="font-medium text-sidebar-foreground">Welcome back</p>
+              <p className="text-sm text-sidebar-foreground opacity-70">Job Seeker</p>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Smart Actions */}
-      <div style={{ marginBottom: '24px' }}>
-        <h4 style={{ 
-          fontSize: '14px', 
-          fontWeight: '600', 
-          color: 'var(--primary-action)', 
-          margin: '0 0 12px 0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}>
-          🚀 SMART ACTIONS
-        </h4>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-          {smartActions.map((action, index) => (
+        {/* Primary Navigation */}
+        <nav className="flex-1 p-4">
+          <ul className="space-y-2">
+            <li>
+              <button
+                onClick={() => onModeChange('jobs')}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+                  currentMode === 'jobs' 
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground' 
+                    : 'text-sidebar-foreground hover:bg-sidebar-accent'
+                }`}
+              >
+                <Home size={20} />
+                <span>Jobs</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onModeChange('profile')}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+                  currentMode === 'profile' 
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground' 
+                    : 'text-sidebar-foreground hover:bg-sidebar-accent'
+                }`}
+              >
+                <User size={20} />
+                <span>Profile</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => onModeChange('settings')}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
+                  currentMode === 'settings' 
+                    ? 'bg-sidebar-primary text-sidebar-primary-foreground' 
+                    : 'text-sidebar-foreground hover:bg-sidebar-accent'
+                }`}
+              >
+                <Settings size={20} />
+                <span>Settings</span>
+              </button>
+            </li>
+          </ul>
+
+          {/* Quick Search */}
+          <div className="mt-6">
+            <div className="relative">
+              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Quick search jobs..."
+                className="w-full pl-10 pr-4 py-2 bg-background border border-input rounded-md text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              />
+            </div>
+          </div>
+
+          {/* Advanced Filters */}
+          <div className="mt-4">
             <button
-              key={index}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 12px',
-                backgroundColor: 'var(--main-background)',
-                border: `1px solid ${action.color}`,
-                borderRadius: '8px',
-                color: action.color,
-                fontSize: '12px',
-                fontWeight: '600',
-                cursor: 'pointer',
-                transition: 'all 0.2s ease',
-                position: 'relative'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = action.color;
-                e.currentTarget.style.color = 'white';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--main-background)';
-                e.currentTarget.style.color = action.color;
-              }}
+              onClick={() => setFiltersExpanded(!filtersExpanded)}
+              className="w-full flex items-center justify-between p-3 bg-sidebar-accent rounded-md hover:bg-sidebar-accent/80 transition-colors"
             >
-              <action.icon size={14} />
-              <span style={{ flex: 1, textAlign: 'left' }}>{action.label}</span>
-              {action.tag && (
-                <span style={{
-                  backgroundColor: 'var(--urgent)',
-                  color: 'white',
-                  padding: '2px 6px',
-                  borderRadius: '8px',
-                  fontSize: '10px',
-                  fontWeight: '700'
-                }}>
-                  {action.tag}
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                <Filter size={16} className="text-sidebar-accent-foreground" />
+                <span className="text-sm font-medium text-sidebar-accent-foreground">Advanced Filters</span>
+              </div>
+              <ChevronDown 
+                size={16} 
+                className={`text-sidebar-accent-foreground transition-transform ${filtersExpanded ? 'rotate-180' : ''}`} 
+              />
             </button>
-          ))}
-        </div>
-      </div>
 
-      {/* Discovery Insights */}
-      <div style={{ marginBottom: '24px' }}>
-        <h4 style={{ 
-          fontSize: '14px', 
-          fontWeight: '600', 
-          color: 'var(--text-primary)', 
-          margin: '0 0 12px 0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}>
-          📈 DISCOVERY INSIGHTS
-        </h4>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          {marketInsights.map((insight, index) => (
-            <div 
-              key={index}
-              style={{ 
-                fontSize: '12px', 
-                color: 'var(--text-secondary)',
-                padding: '6px 0',
-                borderBottom: index < marketInsights.length - 1 ? '1px solid var(--subtle-border)' : 'none'
-              }}
-            >
-              • {insight}
-            </div>
-          ))}
-        </div>
-      </div>
+            {filtersExpanded && (
+              <div className="mt-2 p-3 bg-card border border-border rounded-md">
+                <p className="text-sm text-muted-foreground">Filter options will appear here</p>
+              </div>
+            )}
+          </div>
+        </nav>
 
-      {/* Upcoming Reward */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(255, 195, 0, 0.1) 0%, rgba(126, 217, 87, 0.1) 100%)',
-        border: '1px solid var(--reward)',
-        borderRadius: '8px',
-        padding: '16px'
-      }}>
-        <h4 style={{
-          fontSize: '14px',
-          fontWeight: '600',
-          color: 'var(--text-primary)',
-          margin: '0 0 8px 0',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}>
-          🎁 UPCOMING REWARD
-        </h4>
-        <p style={{ 
-          fontSize: '12px', 
-          color: 'var(--text-secondary)', 
-          margin: '0 0 12px 0'
-        }}>
-          Apply to 3 more jobs → Unlock "Interview Scheduler AI" (Worth $19/mo)
-        </p>
-        <div className="progress-bar">
-          <div 
-            className="progress-fill reward"
-            style={{ width: `${dailyProgressPercentage}%` }}
-          />
+        {/* Footer */}
+        <div className="p-4 border-t border-sidebar-border">
+          <div className="flex items-center justify-between text-xs text-sidebar-foreground opacity-70">
+            <span>Help & Support</span>
+            <span>v1.0.0</span>
+          </div>
         </div>
-      </div>
-    </div>
+      </aside>
+    </>
   );
 };
+
+export default Sidebar;
